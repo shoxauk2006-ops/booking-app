@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Онлайн-бронирование</title>
+    <title>Барбершоп «Black & White»</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: var(--tg-theme-bg-color, #f8f9fa);
-            --text-color: var(--tg-theme-text-color, #111111);
-            --hint-color: var(--tg-theme-hint-color, #8e8e93);
-            --button-color: var(--tg-theme-button-color, #2f80ed);
-            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
-            --card-bg: var(--tg-theme-secondary-bg-color, #ffffff);
+            --bg-color: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --text-color: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-color: #ffffff;
+            --border-color: #2e2e2e;
+            --hover-border: #ffffff;
         }
 
         body {
@@ -21,291 +22,162 @@
             color: var(--text-color);
             margin: 0;
             padding: 16px;
-            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Шапка профиля бизнеса */
-        .profile-header {
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .header {
             text-align: center;
-            background: var(--card-bg);
-            padding: 20px 16px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .profile-avatar {
+        .logo-circle {
             width: 64px;
             height: 64px;
-            background: linear-gradient(135deg, #2f80ed, #56ccf2);
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
+            background: linear-gradient(135deg, #333333, #000000);
+            border: 2px solid #ffffff;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            margin: 0 auto 10px auto;
+            font-size: 26px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
         }
 
-        .profile-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .profile-info {
-            font-size: 13px;
-            color: var(--hint-color);
-        }
-
-        h2 {
-            font-size: 17px;
-            margin-bottom: 12px;
+        h1 {
+            font-size: 20px;
+            margin: 0 0 4px 0;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        /* Карточки услуг */
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         .service-card {
             background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 14px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .service-card.selected {
-            border-color: var(--button-color);
-            background-color: rgba(47, 128, 237, 0.04);
+        .service-card:hover, .service-card:active {
+            border-color: var(--hover-border);
+            transform: translateY(-2px);
+            background-color: #222222;
         }
 
-        .service-title {
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 4px;
+        .service-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .service-details {
-            color: var(--hint-color);
+        .service-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .service-duration {
             font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .service-price {
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--button-color);
-        }
-
-        /* Слоты времени */
-        .slots-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 12px 0;
-        }
-
-        .slot-btn {
-            background-color: var(--card-bg);
-            border: 1px solid rgba(142, 142, 147, 0.3);
-            color: var(--text-color);
-            padding: 12px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
-            transition: 0.2s;
-        }
-
-        .slot-btn.selected {
-            background-color: var(--button-color);
-            color: var(--button-text-color);
-            border-color: var(--button-color);
-        }
-
-        /* Поля ввода */
-        input {
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
-            border-radius: 12px;
-            border: 1px solid rgba(142, 142, 147, 0.3);
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            box-sizing: border-box;
-            font-size: 15px;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: var(--button-color);
-        }
-
-        .btn-main {
-            background-color: var(--button-color);
-            color: var(--button-text-color);
-            border: none;
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
-            margin-top: 16px;
-            box-shadow: 0 4px 12px rgba(47, 128, 237, 0.3);
+            color: var(--accent-color);
+            white-space: nowrap;
         }
 
-        .back-link {
-            display: inline-block;
-            color: var(--button-color);
-            font-size: 14px;
-            text-decoration: none;
-            margin-bottom: 12px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .hidden {
-            display: none;
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 12px;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
 
-    <!-- Шапка профиля -->
-    <div class="profile-header">
-        <div class="profile-avatar">Б</div>
-        <div class="profile-name">Барбершоп «Black & White»</div>
-        <div class="profile-info">✂️ Мужской зал • 📍 Ташкент</div>
-    </div>
+    <div class="container">
+        <div class="header">
+            <div class="logo-circle">B&W</div>
+            <h1>Барбершоп «Black & White»</h1>
+            <div class="subtitle">✂️ Мужской зал • 📍 Ташкент</div>
+        </div>
 
-    <!-- Шаг 1: Выбор услуги -->
-    <div id="step-1">
-        <h2>Выберите услугу:</h2>
-        <div id="services-list"></div>
-    </div>
+        <div class="section-title">Выберите услугу:</div>
 
-    <!-- Шаг 2: Выбор времени -->
-    <div id="step-2" class="hidden">
-        <a class="back-link" onclick="goToStep(1)">← Назад к услугам</a>
-        <h2 id="selected-service-title">Выбор времени:</h2>
-        <div class="slots-container" id="slots-list"></div>
-        <button class="btn-main" onclick="goToStep(3)">Продолжить</button>
-    </div>
+        <div class="services-list">
+            <div class="service-card">
+                <div class="service-info">
+                    <span class="service-name">Мужская стрижка</span>
+                    <span class="service-duration">⏱ 30 мин</span>
+                </div>
+                <div class="service-price">80 000 UZS</div>
+            </div>
 
-    <!-- Шаг 3: Контакты -->
-    <div id="step-3" class="hidden">
-        <a class="back-link" onclick="goToStep(2)">← Назад ко времени</a>
-        <h2>Ваши данные для связи:</h2>
-        <input type="text" id="client-name" placeholder="Ваше имя">
-        <input type="tel" id="client-phone" placeholder="Номер телефона (+998...)">
-        <button class="btn-main" onclick="submitBooking()">Подтвердить запись</button>
-    </div>
+            <div class="service-card">
+                <div class="service-info">
+                    <span class="service-name">Оформление бороды</span>
+                    <span class="service-duration">⏱ 20 мин</span>
+                </div>
+                <div class="service-price">40 000 UZS</div>
+            </div>
 
-    <!-- Экран успеха -->
-    <div id="success-screen" class="hidden" style="text-align: center; margin-top: 60px;">
-        <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-        <h2>Запись успешно оформлена!</h2>
-        <p style="color: var(--hint-color); font-size: 14px; line-height: 1.5;">Мастер уже получил уведомление.<br>Мы пришлем вам напоминание за 2 часа до визита.</p>
+            <div class="service-card">
+                <div class="service-info">
+                    <span class="service-name">Стрижка + Борода</span>
+                    <span class="service-duration">⏱ 50 мин</span>
+                </div>
+                <div class="service-price">110 000 UZS</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            @boockly_bot
+        </div>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
-
-        const services = [
-            { id: 1, title: 'Мужская стрижка', price: '80 000 UZS', duration: '30 мин' },
-            { id: 2, title: 'Оформление бороды', price: '40 000 UZS', duration: '20 мин' },
-            { id: 3, title: 'Стрижка + Борода', price: '110 000 UZS', duration: '50 мин' }
-        ];
-
-        let selectedService = null;
-        let selectedSlot = null;
-
-        function renderServices() {
-            const container = document.getElementById('services-list');
-            container.innerHTML = '';
-            services.forEach(s => {
-                let card = document.createElement('div');
-                card.className = `service-card ${selectedService?.id === s.id ? 'selected' : ''}`;
-                card.innerHTML = `
-                    <div>
-                        <div class="service-title">${s.title}</div>
-                        <div class="service-details">⏱ ${s.duration}</div>
-                    </div>
-                    <div class="service-price">${s.price}</div>
-                `;
-                card.onclick = () => {
-                    selectedService = s;
-                    renderServices();
-                    setTimeout(() => goToStep(2), 250);
-                };
-                container.appendChild(card);
-            });
-        }
-
-        function renderSlots() {
-            const container = document.getElementById('slots-list');
-            container.innerHTML = '';
-            const slots = ['10:00', '11:00', '12:00', '14:00', '15:30', '17:00', '18:30'];
-            
-            slots.forEach(slot => {
-                let btn = document.createElement('div');
-                btn.className = `slot-btn ${selectedSlot === slot ? 'selected' : ''}`;
-                btn.innerText = slot;
-                btn.onclick = () => {
-                    selectedSlot = slot;
-                    renderSlots();
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        function goToStep(stepNumber) {
-            document.getElementById('step-1').classList.add('hidden');
-            document.getElementById('step-2').classList.add('hidden');
-            document.getElementById('step-3').classList.add('hidden');
-
-            if (stepNumber === 1) {
-                document.getElementById('step-1').classList.remove('hidden');
-            } else if (stepNumber === 2) {
-                if (!selectedService) {
-                    alert('Сначала выберите услугу!');
-                    return;
-                }
-                document.getElementById('selected-service-title').innerText = `Слот для: ${selectedService.title}`;
-                renderSlots();
-                document.getElementById('step-2').classList.remove('hidden');
-            } else if (stepNumber === 3) {
-                if (!selectedSlot) {
-                    alert('Пожалуйста, выберите время визита!');
-                    goToStep(2);
-                    return;
-                }
-                document.getElementById('step-3').classList.remove('hidden');
-            }
-        }
-
-        function submitBooking() {
-            const name = document.getElementById('client-name').value;
-            const phone = document.getElementById('client-phone').value;
-
-            if (!name || !phone) {
-                alert('Пожалуйста, заполните имя и номер телефона!');
-                return;
-            }
-
-            document.getElementById('step-3').classList.add('hidden');
-            document.getElementById('success-screen').classList.remove('hidden');
-        }
-
-        renderServices();
     </script>
 </body>
 </html>
