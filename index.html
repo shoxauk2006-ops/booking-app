@@ -198,12 +198,16 @@
         }
     }
 
-    tg.MainButton.onClick(function() {
-        // Здесь данные отправляются или выводятся подтверждение
-        tg.showAlert(`Успешно забронировано!\n\nУслуга: ${booking.service}\nВремя: ${booking.time}\nИмя: ${booking.name}\nТелефон: ${booking.phone}`);
-        // tg.close();
-    });
-</script>
+   tg.MainButton.onClick(function() {
+        // Формируем текст для отправки боту
+        const data = JSON.stringify({
+            service: booking.service,
+            price: booking.price,
+            time: booking.time,
+            name: booking.name,
+            phone: booking.phone
+        });
 
-</body>
-</html>
+        // Отправляем данные в Telegram-бот и закрываем мини-приложение
+        tg.sendData(data);
+    });
